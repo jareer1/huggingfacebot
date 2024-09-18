@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuggingFace AI Model</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: #fafafa;
+            overflow-y: auto;
+        }
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 60%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-start;
+        }
+        .bot-message {
+            background-color: #e0e0e0;
+            align-self: flex-end;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById('messageInput');
+            const message = inputField.value;
+            inputField.value = '';
+            
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div class="message user-message">${message}</div>`;
+            
+            try {
+                const response = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+        
+                const result = await response.text(); // Read response as text
+                chatBox.innerHTML += `<div class="message bot-message">${result}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+        
+            } catch (error) {
+                console.error('Error:', error);
+                chatBox.innerHTML += `<div class="message bot-message">Sorry, there was an error processing your request.</div>`;
+            }
+        }
+    </script>
+        
+</head>
+<body>
+    <header>
+        <h1>HuggingFace AI Model</h1>
+    </header>
+    <main>
+        <section class="chat-container">
+            <div id="chatBox" class="chat-box">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="input-container">
+                <input id="messageInput" type="text" placeholder="Type your message..." />
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 AI Chatbot. All rights reserved.</p>
+    </footer>
+</body>
+</html>
