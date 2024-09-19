@@ -82,7 +82,7 @@ def handle_query():
     
     if model_search_results:
         context = extract_context_from_models(model_search_results)
-        prompt = f"User question is: {user_message}. Info about the question is: {context}. Now ans user query according to info provided to you(use only which is relevant not all info). Just provide in structured, relevant way and no need for explanation.No need for any recommendation"
+        prompt = f"User question is: {user_message}. Info about the question is: {context}. Now ans user query according to info provided to you(use only which is relevant and discard all other irrelevant models). Just provide in structured, relevant way and no need for explanation.No need for any recommendation or notes"
         answer = call_gemini_model(prompt)
         
         formatted_answer = format_gemini_response(answer)
