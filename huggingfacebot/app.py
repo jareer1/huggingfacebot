@@ -93,5 +93,5 @@ def handle_query():
         return jsonify({"response": "No relevant models found."})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context=('certificate.pem', 'private_key_nopass.pem'))
+    app.run(host='0.0.0.0', port=5000)
 
